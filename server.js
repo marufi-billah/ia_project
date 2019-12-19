@@ -1,7 +1,7 @@
 var HTTP = require('http');
 var URL = require('url');
 var FS = require('fs');
-var Database = require('./database');
+var Database = require('./modules/database');
 
 HTTP.createServer(function(request, response){
     var url_object = URL.parse(request.url, true);
