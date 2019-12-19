@@ -1,4 +1,4 @@
-# ia_project
+# IA Project
 Internet Application Term Project
 
 ## Prerequisite
