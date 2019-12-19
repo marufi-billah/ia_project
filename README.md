@@ -1,11 +1,11 @@
 # ia_project
 Internet Application Term Project
 
-##Prerequisite
+## Prerequisite
 - Latest version of node installed.
 - Mysql server running on port 3306
 
-##Installation
+## Installation
 Clone git repo and run
 ```
 npm install
