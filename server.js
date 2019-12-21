@@ -1,7 +1,8 @@
 var HTTP = require('http');
 var URL = require('url');
 var FS = require('fs');
-var Database = require('./modules/database');
+qs = require('querystring');
+var Candidate = require('./model/candidate');
 
 HTTP.createServer(function(request, response){
     var url_object = URL.parse(request.url, true);
@@ -9,20 +10,42 @@ HTTP.createServer(function(request, response){
     //Serving api request if /api path is defined in url
     //Follow API Documents for more details.
     if(url_object.pathname == '/api'){
+        if(request.method == 'POST'){
+            var body='';
+            request.on('data', function (data) {
+                body +=data;
+            });
+            request.on('end',function(){
+                var POST =  qs.parse(body);
+                
+                if(POST['action'] == 'load_candidate'){
 
-        //================================================================
-        //Database connection test, this should be inside model classes.
-        //================================================================
-        var db_instance = new Database();
-        var db_conn = db_instance.get_connection();
-        db_conn.query("SELECT VERSION()", function(error, result){
-            if(error) console.log(error);
-            else console.log(result);
-        });
-        response.end();
-        //================================================================
-        //End of database connection.
-        //================================================================
+                    //Model Loading and updating example
+
+                    var candidate = new Candidate();
+                    candidate.load(POST['id']).then(() => {
+                        console.log(candidate.id);
+                        console.log(candidate.full_name);
+                        console.log(candidate.username);
+
+                        candidate.phone = "01207199584";
+
+                        candidate.save().then(() => {
+                            console.log("Candidate successfully updated!");
+                            console.log(candidate.phone);
+                        }).catch((reason) => {
+                            console.log(reason);
+                        })
+                    }).catch((reason) => {
+                        console.log(reason);
+                    });
+
+                    //Example end.
+                }
+                
+                response.end();
+            });
+        }
     }
     else{
     //Serving static file from static folder.

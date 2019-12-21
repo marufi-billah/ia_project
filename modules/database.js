@@ -5,26 +5,28 @@ class Database {
     db_name = "ia_project";
     db_user = "root";
     db_pass = "";
-    connection;
+    static connection = null;
     
     constructor(){
-        this.connection = mysql.createConnection({
-            host: this.db_host,
-            user: this.db_user,
-            password: this.db_pass,
-            database: this.db_name
-        });
-        this.connection.connect(function(error){
-            if(error){
-                console.log(error);
-            }
-            else{
-                console.log("Database connected successfully!");
-            }
-        });
+        if(Database.connection == null){
+            Database.connection = mysql.createConnection({
+                host: this.db_host,
+                user: this.db_user,
+                password: this.db_pass,
+                database: this.db_name
+            });
+            Database.connection.connect(function(error){
+                if(error){
+                    console.log(error);
+                }
+                else{
+                    console.log("Database connected successfully!");
+                }
+            });
+        }
     }
     get_connection(){
-        return this.connection;
+        return Database.connection;
     }
 }
 
