@@ -1,45 +1,39 @@
 var Database = require('../modules/database');
 
-class HR {
-    id = null;
-    email = "";
-    password = "";
-    name = "";
+class Session {
+    id = "";
+    user_id = null;
+    user_type = "";
+    expire = "";
 
     connection;
-    constructor(id, email, password, name){
+    constructor(){
         var db_instance = new Database();
         this.connection = db_instance.get_connection();
-
-        if(id !== undefined && email !== undefined && password !== undefined && name !== undefined){
-            this.id = id;
-            this.email = email;
-            this.password = password;
-            this.name = name;
-        }
     }
 
-    create(email, password, name){
+    create(id, user_id, user_type, expire){
         return new Promise((resolve, reject) => {
             var self = this;
-            if(email !== undefined && name !== undefined){
-                self.connection.query("INSERT INTO hrs(email, password, name) VALUES(?, ?);",[email, password, name], 
+            if(id !== undefined && user_id !== undefined && user_type !== undefined && expire !== undefined){
+                self.connection.query("INSERT INTO sessions(id, user_id, user_type, expire) VALUES(?,?,?,?);",
+                [id, user_id, user_type, expire], 
                 (error, result) => {
                     if(error){
                         console.log(error);
                         reject(error);
                     }
                     else{
-                        self.id = result['insertId'];
-                        self.email = email;
-                        self.password = password;
-                        self.name = name;
+                        self.id = id;
+                        self.user_id = user_id;
+                        self.user_type = user_type;
+                        self.expire = expire;
                         resolve(true);
                     }
                 });
             }
             else{
-                console.log("Resource", "Unable to create HR, missing parameters!");
+                console.log("Resource", "Unable to create session, missing parameters!");
                 reject({error: "missing parameter"});
             }
         });
@@ -49,7 +43,7 @@ class HR {
         return new Promise((resolve, reject) => {
             var self = this;
             if(id !== undefined){
-                self.connection.query("SELECT * FROM hrs WHERE id=?;",[id], 
+                self.connection.query("SELECT * FROM sessions WHERE id=?;",[id], 
                 (error, result) => {
                     if(error){
                         console.log(error);
@@ -58,9 +52,9 @@ class HR {
                     else{
                         if(result.length > 0){
                             self.id = result[0]['id'];
-                            self.email = result[0]['email'];
-                            self.password = result[0]['password'];
-                            self.name = result[0]['name'];
+                            self.user_id = result[0]['user_id'];
+                            self.user_type = result[0]['user_type'];
+                            self.expire = result[0]['expire'];
                             resolve(true);
                         }
                         else{
@@ -71,7 +65,7 @@ class HR {
                 });
             }
             else{
-                console.log("Resource", "Unable to load HR, missing id!");
+                console.log("Resource", "Unable to load session, missing id!");
                 reject({error: "missing parameter"});
             }
         });
@@ -81,24 +75,24 @@ class HR {
         return new Promise((resolve, reject) => {
             var self = this;
             if(self.id !== null){
-                self.connection.query("DELETE FROM hrs WHERE id=?;",[self.id], 
+                self.connection.query("DELETE FROM sessions WHERE id=?;",[self.id], 
                 (error, result) => {
                     if(error){
                         console.log(error);
                         reject(error);
                     }
                     else{
-                        self.id = null;
-                        self.email = "";
-                        self.password = "";
-                        self.name = "";
+                        self.id = "";
+                        self.user_id = null;
+                        self.user_type = "";
+                        self.expire = "";
                         resolve(true);
                     }
                 });
             }
             else{
-                console.log("Resource", "Unable to delete HR, HR is not loaded!");
-                reject({error: "Invalid HR id, maybe HR is not loaded from database!"});
+                console.log("Resource", "Unable to delete session, session is not loaded!");
+                reject({error: "Invalid session id, maybe session is not loaded from database!"});
             }
         });
     }
@@ -107,7 +101,8 @@ class HR {
         return new Promise((resolve, reject) => {
             var self = this;
             if(self.id !== null){
-                self.connection.query("UPDATE hrs SET email=?, password=?, name=? WHERE id=?;",[self.email, self.password, self.name, self.id], 
+                self.connection.query("UPDATE sessions SET user_id=?, user_type=?, expire=? WHERE id=?;",
+                [self.user_id, self.user_type, self.expire, self.id], 
                 (error, result) => {
                     if(error){
                         console.log(error);
@@ -119,11 +114,11 @@ class HR {
                 });
             }
             else{
-                console.log("Resource", "Unable to update HR, HR is not loaded!");
-                reject({error: "Invalid HR id, maybe HR is not loaded from database!"});
+                console.log("Resource", "Unable to update session, session is not loaded!");
+                reject({error: "Invalid session id, maybe session is not loaded from database!"});
             }
         });
     }
 }
 
-module.exports = HR;
+module.exports = Session;

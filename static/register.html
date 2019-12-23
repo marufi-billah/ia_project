@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login - Internet Application Project</title>
+    <title>Register - Internet Application Project</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="./jquery.min.js"></script>
@@ -19,19 +19,19 @@
 <body>
     <div class="loginbox">
     <img alt="Avatar" src="avatar.png" class="photo">
-        <h1>Login Here</h1>
+        <h1>Register Here</h1>
         <form>
-            <select id="login-selector" class="login-selector">
-                <option value="candidate">Candidate</option>
-                <option value="hr">HR</option>
-            </select>
+            <p>Full Name</p>
+            <input type="text" id="register-full-name" placeholder="Enter Full Name">
             <p>Email</p>
-            <input type="text" id="login-email" placeholder="Enter Email">
+            <input type="text" id="register-email" placeholder="Enter Email">
+            <p>Username</p>
+            <input type="text" id="register-username" placeholder="Enter Username">
             <p>Password</p>
-            <input type="password" id="login-password" placeholder="Enter Password">
+            <input type="password" id="register-password" placeholder="Enter Password">
             <div class="status-message"></div>
-            <input type="submit" id="login-submit" value="Login">
-            <a href="register.html">Don't have an account?</a>
+            <input type="submit" id="register-submit" value="register">
+            <a href="index.html">Login to your account</a>
         </form>
         
     </div>

@@ -4,6 +4,7 @@ class Candidate {
     id = null;
     full_name = "";
     email = "";
+    password = "";
     cv_link = "";
     phone = "";
     username = "";
@@ -11,15 +12,16 @@ class Candidate {
     position_id = null;
 
     connection;
-    constructor(id, full_name, email, username, cv_link, phone, approval, position_id){
+    constructor(id, full_name, email, password, username, cv_link, phone, approval, position_id){
         var db_instance = new Database();
         this.connection = db_instance.get_connection();
 
-        if(id !== undefined && full_name !== undefined && email !== undefined && cv_link !== undefined &&
+        if(id !== undefined && full_name !== undefined && email !== undefined && password !== undefined && cv_link !== undefined &&
             phone !== undefined && username !== undefined && approval !== undefined && position_id !== undefined){
             this.id = id;
             this.full_name = full_name;
             this.email = email;
+            this.password = password;
             this.cv_link = cv_link;
             this.phone = phone;
             this.username = username;
@@ -28,13 +30,13 @@ class Candidate {
         }
     }
 
-    create(full_name, email, username, cv_link, phone, approval, position_id){
+    create(full_name, email, password, username, cv_link, phone, approval, position_id){
         return new Promise((resolve, reject) => {
             var self = this;
-            if(full_name !== undefined && email !== undefined && cv_link !== undefined &&phone !== undefined && 
+            if(full_name !== undefined && email !== undefined && password !== undefined && cv_link !== undefined && phone !== undefined && 
                 username !== undefined && approval !== undefined && position_id !== undefined){
-                self.connection.query("INSERT INTO candidates(full_name, email, cv_link, phone, username, approval, position_id) VALUES(?,?,?,?,?,?,?);",
-                [full_name, email, cv_link, phone, username, approval, position_id], 
+                self.connection.query("INSERT INTO candidates(full_name, email, password, cv_link, phone, username, approval, position_id) VALUES(?,?,?,?,?,?,?,?);",
+                [full_name, email, password, cv_link, phone, username, approval, position_id], 
                 (error, result) => {
                     if(error){
                         console.log(error);
@@ -44,6 +46,7 @@ class Candidate {
                         self.id = result['insertId'];
                         self.full_name = full_name;
                         self.email = email;
+                        self.password = password;
                         self.cv_link = cv_link;
                         self.phone = phone;
                         self.username = username;
@@ -53,9 +56,9 @@ class Candidate {
                     }
                 });
             }
-            else if(full_name !== undefined && email !== undefined  && username !== undefined){
-                self.connection.query("INSERT INTO candidates(full_name, email, username) VALUES(?,?,?);",
-                [full_name, email, username], 
+            else if(full_name !== undefined && email !== undefined && password !== undefined && username !== undefined){
+                self.connection.query("INSERT INTO candidates(full_name, email, password, username) VALUES(?,?,?,?);",
+                [full_name, email, password, username], 
                 (error, result) => {
                     if(error){
                         console.log(error);
@@ -65,6 +68,7 @@ class Candidate {
                         self.id = result['insertId'];
                         self.full_name = full_name;
                         self.email = email;
+                        self.password = password;
                         self.cv_link = "";
                         self.phone = "";
                         self.username = username;
@@ -96,6 +100,7 @@ class Candidate {
                             self.id = result[0]['id'];
                             self.full_name = result[0]['full_name'];
                             self.email = result[0]['email'];
+                            self.password = result[0]['password'];
                             self.cv_link = result[0]['cv_link'];
                             self.phone = result[0]['phone'];
                             self.username = result[0]['username'];
@@ -131,6 +136,7 @@ class Candidate {
                         self.id = null;
                         self.full_name = "";
                         self.email = "";
+                        self.password = "";
                         self.cv_link = "";
                         self.phone = "";
                         self.username = "";
@@ -151,8 +157,8 @@ class Candidate {
         return new Promise((resolve, reject) => {
             var self = this;
             if(self.id !== null){
-                self.connection.query("UPDATE candidates SET full_name=?, email=?, cv_link=?, phone=?, username=?, approval=?, position_id=? WHERE id=?;",
-                [self.full_name, self.email, self.cv_link, self.phone, self.username, self.approval, self.position_id, self.id], 
+                self.connection.query("UPDATE candidates SET full_name=?, email=?, password=?, cv_link=?, phone=?, username=?, approval=?, position_id=? WHERE id=?;",
+                [self.full_name, self.email, self.password, self.cv_link, self.phone, self.username, self.approval, self.position_id, self.id], 
                 (error, result) => {
                     if(error){
                         console.log(error);

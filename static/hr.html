@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>HR - Internet Application Project</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="./home.css">
+  <script src="./jquery.min.js"></script>
+  <script src="./script.js"></script>
+
+  <script>
+      if(getCookie('auth_token').length <= 32)
+          window.location.href="/";
+      if(getCookie('user_type') == 'candidate')
+        window.location.href="/home.html";
+      
+  </script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Online Testing</h1>
+  <p>Internet Application Term Project</p>
+</div>
+
+<div class="navbar">
+  <a class="selected" href="hr.html">HR Home</a>
+  <a href="take_exam.html">Exam Types</a>
+  <a href="take_exam.html">Edit Exam</a>
+
+  <button id="user-logout" class="user-logout">Logout</button>
+  <button id="user-welcome" class="user-welcome">Welcome user</button>
+  
+</div>
+
+<div class="row">
+  <div class="main">
+    <div class="table-container users-table">
+      <table>
+        
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <h2>Footer</h2>
+</div>
+
+</body>
+</html>
