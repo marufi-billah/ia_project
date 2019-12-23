@@ -1,0 +1,107 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url(https://previews.123rf.com/images/onirb/onirb1405/onirb140500328/27956493-stylish-quiz-sign-background-with-space-for-own-text.jpg);
+    background-size: cover;
+}
+
+.loginbox{
+    width: 320px;
+    min-height: 420px;
+    background: #000;
+    color: #fff;
+    font-family: sans-serif;
+    top: 45%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    box-sizing: border-box;
+    padding: 70px 30px 30px 30px;
+}
+
+.photo{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+     top: -50px; 
+    left: 35%;
+}
+
+h1{
+    margin: 0;
+    padding: 0 0 20px; 
+    text-align: center;
+    font-size: 22px;
+}
+
+.loginbox p{
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.loginbox .status-message{
+    color: orange;
+    padding-bottom: 10px;
+}
+
+.loginbox input{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.loginbox input[type="text"], input[type="password"]
+{
+    border: none;
+    border-bottom: 1px solid #fff;
+    background: transparent;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.loginbox input[type="text"].error-input, input[type="password"].error-input
+{
+    border-bottom-color: red;
+}
+
+.loginbox input[type="submit"]
+{
+    border: none;
+    height: 40px;
+    background: #fb2525;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+}
+
+.loginbox input[type="submit"]:hover
+{
+    cursor: pointer;
+    background: #ffc107;
+    color: #000;
+} 
+.loginbox a{
+    text-decoration: none;
+    font-size: 20px;
+    line-height: 20px;
+    color: darkgrey;
+}
+
+.loginbox a:hover
+{
+    color: #ffc107;
+}
+
+.loginbox .login-selector{
+    background-color: transparent;
+    color: orange;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    border: none;
+    box-shadow: 0 0 4px white;
+    margin-bottom: 30px;
+    padding: 10px;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Home - Internet Application Project</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="./home.css">
+  <script src="./jquery.min.js"></script>
+  <script src="./script.js"></script>
+
+  <script>
+      if(getCookie('auth_token').length <= 32)
+        window.location.href="/";
+      if(getCookie('user_type') == 'hr')
+        window.location.href="/hr.html";
+
+  </script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Online Testing</h1>
+  <p>Internet Application Term Project</p>
+</div>
+
+<div class="navbar">
+  <a class="selected" href="home.html">Profile</a>
+  <a href="take_exam.html">Take Exam</a>
+
+  <button id="user-logout" class="user-logout">Logout</button>
+  <button id="user-welcome" class="user-welcome">Welcome user</button>
+  
+</div>
+
+<div class="row">
+  <div class="main">
+    <div class="table-container">
+      <table>
+        <tr>
+          <td>Candidate ID</td>
+          <td id="candidate_id"></td>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td id="candidate_name"></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td id="candidate_email"></td>
+        </tr>
+        <tr>
+          <td>Username</td>
+          <td id="candidate_username"></td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td id="candidate_phone">
+          </td>
+        </tr>
+        <tr>
+          <td>CV Link</td>
+          <td id="candidate_cv_link"></td>
+        </tr>
+        <tr>
+          <td>Job Title</td>
+          <td id="candidate_position"></td>
+        </tr>
+        <tr>
+          <td>Approval</td>
+          <td id="candidate_approval"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <h2>Footer</h2>
+</div>
+
+</body>
+</html>

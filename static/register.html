@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register - Internet Application Project</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="./jquery.min.js"></script>
+    <script src="./script.js"></script>
+
+    <script>
+        if(getCookie('auth_token').length >= 32){
+            if(getCookie('user_type') == 'candidate')
+                window.location.href="/home.html";
+            else if(getCookie('user_type') == 'hr')
+                window.location.href="/hr.html";
+        }
+    </script>
+</head>
+<body>
+    <div class="loginbox">
+    <img alt="Avatar" src="avatar.png" class="photo">
+        <h1>Register Here</h1>
+        <form>
+            <p>Full Name</p>
+            <input type="text" id="register-full-name" placeholder="Enter Full Name">
+            <p>Email</p>
+            <input type="text" id="register-email" placeholder="Enter Email">
+            <p>Username</p>
+            <input type="text" id="register-username" placeholder="Enter Username">
+            <p>Password</p>
+            <input type="password" id="register-password" placeholder="Enter Password">
+            <div class="status-message"></div>
+            <input type="submit" id="register-submit" value="register">
+            <a href="index.html">Login to your account</a>
+        </form>
+        
+    </div>
+
+</body>
+</html>
