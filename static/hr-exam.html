@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>HR - Internet Application Project</title>
+  <title>Edit Exam - Internet Application Project</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="./home.css">
@@ -24,8 +24,8 @@
 </div>
 
 <div class="navbar">
-  <a class="selected" href="hr.html">HR Home</a>
-  <a href="hr-exam.html">Edit Exam</a>
+  <a href="hr.html">HR Home</a>
+  <a class="selected" href="hr-exam.html">Edit Exam</a>
 
   <button id="user-logout" class="user-logout">Logout</button>
   <button id="user-welcome" class="user-welcome">Welcome user</button>
@@ -34,9 +34,13 @@
 
 <div class="row">
   <div class="main">
-    <div class="table-container users-table">
+    <div class="table-container exam-type-table">
+      <div class="add-exam-ctn">
+        <input type="text" id="add-exam-input" placeholder="Enter exam name">
+        <button type="button" id="add-exam">Add Exam</button>
+      </div>
       <table>
-        
+
       </table>
     </div>
   </div>

@@ -2,6 +2,9 @@ var Database = require('../modules/database');
 var Candidate = require('../model/candidate');
 var HR = require('../model/hr');
 var Position = require('../model/position');
+var Exam = require('../model/exam');
+var Question = require('../model/question');
+var Answer = require('../model/answer');
 var Session = require('../model/session');
 var Crypto = require('crypto');
 
@@ -543,6 +546,429 @@ class User {
                         var response = {status: "error", code: 404, message: "Candidate not found!"}
                         reject(JSON.stringify(response));
                     })
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_exams(auth_token){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    this.connection.query("SELECT * FROM exams", function(error, result){
+                        if(error){
+                            console.log(error);
+                            var response = {status: "failed", code: 500, message: "Unable to retrieve exams!"}
+                            reject(JSON.stringify(response));
+                        }
+                        else{
+                            if(result.length > 0){
+                                var response = {
+                                    status: "success", 
+                                    code: 200, 
+                                    message: "",
+                                    exams: result
+                                }
+                                resolve(JSON.stringify(response));
+                            }
+                            else{
+                                var response = {status: "error", code: 404, message: "No exams available!"}
+                                reject(JSON.stringify(response))
+                            }
+                        }
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_exam(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var exam = new Exam();
+                return exam.load(id).then(() => {
+                    var response = {
+                        status: "success", 
+                        code: 200, 
+                        message: "",
+                        exam: {id: exam.id, name: exam.name, description: exam.description}
+                    }
+                    resolve(JSON.stringify(response));
+                }).catch((reason) => {
+                    console.log(reason);
+                    var response = {status: "error", code: 404, message: "Failed load exam!"}
+                    reject(JSON.stringify(response));
+                });
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    add_exam(auth_token, name, description){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var exam = new Exam();
+                    return exam.create(name, description).then(() => {
+                        var response = {status: "success", code: 200, message: "Exam added successfully"}
+                        resolve(JSON.stringify(response));
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to add exam!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    update_exam(auth_token, id, name, description){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var exam = new Exam();
+                    return exam.load(id).then(() => {
+                        exam.name = name;
+                        exam.description = description;
+
+                        return exam.save().then(() => {
+                            var response = {status: "success", code: 200, message: "Exam updated successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to update exam!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load exam!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    delete_exam(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var exam = new Exam();
+                    return exam.load(id).then(() => {
+                        return exam.delete().then(() => {
+                            var response = {status: "success", code: 200, message: "Exam deleted successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to delete exam!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load exam!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_questions(auth_token, exam_id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                this.connection.query("SELECT * FROM questions WHERE exam_id=?",[exam_id], function(error, result){
+                    if(error){
+                        console.log(error);
+                        var response = {status: "failed", code: 500, message: "Unable to retrieve Questions!"}
+                        reject(JSON.stringify(response));
+                    }
+                    else{
+                        if(result.length > 0){
+                            var response = {
+                                status: "success", 
+                                code: 200, 
+                                message: "",
+                                questions: result
+                            }
+                            resolve(JSON.stringify(response));
+                        }
+                        else{
+                            var response = {status: "error", code: 404, message: "No questions available!"}
+                            reject(JSON.stringify(response))
+                        }
+                    }
+                });
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_question(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var question = new Question();
+                return question.load(id).then(() => {
+                    var response = {
+                        status: "success", 
+                        code: 200, 
+                        message: "",
+                        question: {id: question.id, question: question.question, exam_id: question.exam_id}
+                    }
+                    resolve(JSON.stringify(response));
+                }).catch((reason) => {
+                    console.log(reason);
+                    var response = {status: "error", code: 404, message: "Failed load Question!"}
+                    reject(JSON.stringify(response));
+                });
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    add_question(auth_token, question_text, exam_id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var question = new Question();
+                    return question.create(question_text, exam_id).then(() => {
+                        var response = {status: "success", code: 200, message: "Question added successfully"}
+                        resolve(JSON.stringify(response));
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to add question!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    update_question(auth_token, id, question_text){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var question = new Question();
+                    return question.load(id).then(() => {
+                        question.question = question_text;
+
+                        return question.save().then(() => {
+                            var response = {status: "success", code: 200, message: "Question updated successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to update question!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load question!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    delete_question(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var question = new Question();
+                    return question.load(id).then(() => {
+                        return question.delete().then(() => {
+                            var response = {status: "success", code: 200, message: "Question deleted successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to delete question!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load question!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_answers(auth_token, question_id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                this.connection.query("SELECT * FROM answers WHERE question_id=?",[question_id], function(error, result){
+                    if(error){
+                        console.log(error);
+                        var response = {status: "failed", code: 500, message: "Unable to retrieve Answers!"}
+                        reject(JSON.stringify(response));
+                    }
+                    else{
+                        if(result.length > 0){
+                            var response = {
+                                status: "success", 
+                                code: 200, 
+                                message: "",
+                                answers: result
+                            }
+                            resolve(JSON.stringify(response));
+                        }
+                        else{
+                            var response = {status: "error", code: 404, message: "No answers available!"}
+                            reject(JSON.stringify(response))
+                        }
+                    }
+                });
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    get_answer(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var answer = new Answer();
+                return answer.load(id).then(() => {
+                    var response = {
+                        status: "success", 
+                        code: 200, 
+                        message: "",
+                        answer: {id: answer.id, answer: answer.answer, correct: answer.correct, question_id: answer.question_id}
+                    }
+                    resolve(JSON.stringify(response));
+                }).catch((reason) => {
+                    console.log(reason);
+                    var response = {status: "error", code: 404, message: "Failed load Answer!"}
+                    reject(JSON.stringify(response));
+                });
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    add_answer(auth_token, answer_text, correct, question_id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var answer = new Answer();
+                    return answer.create(answer_text, correct, question_id).then(() => {
+                        var response = {status: "success", code: 200, message: "Answer added successfully"}
+                        resolve(JSON.stringify(response));
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to add answer!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    update_answer(auth_token, id, answer_text, correct){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var answer = new Answer();
+                    return answer.load(id).then(() => {
+                        answer.answer = answer_text;
+                        answer.correct = correct;
+
+                        return answer.save().then(() => {
+                            var response = {status: "success", code: 200, message: "Answer updated successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to update answer!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load answer!"}
+                        reject(JSON.stringify(response));
+                    });
+                }
+                else{
+                    var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}
+                    reject(JSON.stringify(response));
+                }
+            }).catch((reason) => {
+                reject(reason);
+            });
+        });
+    }
+    delete_answer(auth_token, id){
+        return new Promise((resolve, reject) => {
+            return this.check_user_login(auth_token).then((user) => {
+                var user_type = user.user_type;
+                if(user_type == 'hr'){
+                    var answer = new Answer();
+                    return answer.load(id).then(() => {
+                        return answer.delete().then(() => {
+                            var response = {status: "success", code: 200, message: "Answer deleted successfully"}
+                            resolve(JSON.stringify(response));
+                        }).catch((reason) => {
+                            console.log(reason);
+                            var response = {status: "error", code: 500, message: "Failed to delete answer!"}
+                            reject(JSON.stringify(response));
+                        });
+                    }).catch((reason) => {
+                        console.log(reason);
+                        var response = {status: "error", code: 404, message: "Failed to load answer!"}
+                        reject(JSON.stringify(response));
+                    });
                 }
                 else{
                     var response = {status: "error", code: 403, message: "You are not allowed to perform this action!"}

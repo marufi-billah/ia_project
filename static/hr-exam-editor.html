@@ -24,7 +24,7 @@
 </div>
 
 <div class="navbar">
-  <a class="selected" href="hr.html">HR Home</a>
+  <a href="hr.html">HR Home</a>
   <a href="hr-exam.html">Edit Exam</a>
 
   <button id="user-logout" class="user-logout">Logout</button>
@@ -34,7 +34,32 @@
 
 <div class="row">
   <div class="main">
-    <div class="table-container users-table">
+    <div class="table-container exam-editor-table">
+        <table>
+            <tr>
+              <th>Exam ID</th>
+              <td id="exam-editor-id"></td>
+            </tr>
+            <tr>
+              <th>Exam Name</th>
+              <td id="exam-editor-name"></td>
+            </tr>
+            <tr>
+              <th>Exam Description</th>
+              <td id="exam-editor-description"></td>
+            </tr>
+            <tr>
+              <th>Action</th>
+              <td id="exam-editor-action"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-container exam-question-table">
+      <h2 style="text-align: center">Questions</h2>
+      <div class="add-question-ctn">
+        <input type="text" id="add-question-input" placeholder="Enter question">
+        <button type="button" id="add-question">Add Question</button>
+      </div>
       <table>
         
       </table>

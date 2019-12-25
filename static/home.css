@@ -111,6 +111,7 @@
     width: 100%;
     max-width: 800px;
     margin: auto;
+    margin-bottom: 20px;
     border: 3px solid #aaa;
   }
   .table-container table{
@@ -136,6 +137,27 @@
   }
   .position-selector{
     padding: 5px;
+  }
+
+  .add-exam-ctn, .add-question-ctn{
+    width: 95%;
+    margin: 20px auto;
+  }
+  .add-exam-ctn input, .add-question-ctn input{
+    width: 70%;
+    height: 40px;
+    border-radius: 3px;
+    margin: auto 2%;
+    font-size: 16px;
+  }
+  .add-exam-ctn button, .add-question-ctn button{
+    width: 25%;
+    height: 40px;
+  }
+  
+  .exam-editor-table th{
+    width: 200px;
+    text-align: left;
   }
   
   /* Fake image, just for this example */
