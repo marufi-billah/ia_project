@@ -140,7 +140,7 @@ $(document).ready(function(){
                             $('#candidate_position').text(data['position']['name']);
                         else 
                             $('#candidate_position').text("None");
-                        var approval = (data['approval']) ? 'Approved' : 'Not Approved';
+                        var approval = (data['approval'] == 'approved') ? 'Approved' : 'Not Approved';
                         $('#candidate_approval').text(approval);
                     }
                 }
@@ -299,14 +299,14 @@ $(document).ready(function(){
                     else 
                         $('#candidate_details_position').text("None");
 
-                    if(data['approval'] == null || data['approval'] == 0){
-                        $('#candidate_details_approval').text("Not Approved");
-                        var html = '<button class="table-cell-btn" id="candidate-approval" data-id="'+data['id']+'" data-approval="1">Approve</button>';
+                    if(data['approval'] == 'approved'){
+                        $('#candidate_details_approval').text("Approved");
+                        var html = '<button class="table-cell-btn" id="candidate-approval" data-id="'+data['id']+'" data-approval="0">Disapprove</button>';
                         $('#candidate_details_approval').append(html);
                     }
                     else{
-                        $('#candidate_details_approval').text("Approved");
-                        var html = '<button class="table-cell-btn" id="candidate-approval" data-id="'+data['id']+'" data-approval="0">Disapprove</button>';
+                        $('#candidate_details_approval').text("Not Approved");
+                        var html = '<button class="table-cell-btn" id="candidate-approval" data-id="'+data['id']+'" data-approval="1">Approve</button>';
                         $('#candidate_details_approval').append(html);
                     }
                     
@@ -317,7 +317,7 @@ $(document).ready(function(){
     $('#candidate_details_approval').on('click', '#candidate-approval', function(){
         var auth_token = getCookie('auth_token');
         var user_id = $(this).data('id');
-        var approval = $(this).data('approval');
+        var approval = parseInt($(this).data('approval'));
 
         $.ajax({
             url: '/api',
@@ -329,7 +329,190 @@ $(document).ready(function(){
             }
         })
     });
+
+    if($('.exam-type-table').length){
+        var auth_token = getCookie('auth_token');
+        $.ajax({
+            url: '/api',
+            type: 'POST',
+            data: { action: 'get_exams', auth_token: auth_token}
+        }).done(function(data){
+            if(data['status'] == 'success'){
+                var html = '<tr><th>ID</th><th>Name</th><th>Action</th></tr>';
+                for(let key in data['exams']){
+                    html += '<tr>';
+                    html += '<td>'+data['exams'][key]['id']+'</td>';
+                    html += '<td>'+data['exams'][key]['name']+'</td>';
+                    html += '<td><a href="/hr-exam-editor.html?exam_id='+data['exams'][key]['id']+'"><button class="table-cell-btn">Manage</button></a></td>';
+                    html += '</tr>';
+                }
+                $('.exam-type-table').find('table').html(html);
+            }
+        })
+    }
+    $('#add-exam').click(function(event){
+        var name = $('#add-exam-input').val();
+        var description = "";
+        if(name.length > 0){
+            var auth_token = getCookie("auth_token");
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    action: 'add_exam',
+                    auth_token: auth_token,
+                    name: name,
+                    description: description
+                }
+            }).done(function(data){
+                if(data['status'] == 'success'){
+                    $('#add-exam-input').val("");
+                    window.location.reload();
+                }
+            });
+        }
+    });
+    if($('.exam-editor-table').length){
+        var auth_token = getCookie('auth_token');
+        var id = getParameterByName('exam_id')
+        $.ajax({
+            url: '/api',
+            type: 'POST',
+            data: { action: 'get_exam', auth_token: auth_token, id: id}
+        }).done(function(data){
+            if(data['status'] == 'success'){
+                $('#exam-editor-id').text(data['exam']['id']);
+                $('#exam-editor-name').text(data['exam']['name']);
+                $('#exam-editor-description').text(data['exam']['description']);
+                $('#exam-editor-action').html('<button class="table-cell-btn" id="delete_exam" data-id="'+data['exam']['id']+'">Delete</button>')
+            }
+        })
+    }
+    $('#exam-editor-action').on('click', '#delete_exam', function(event){
+        event.preventDefault();
+        var auth_token = getCookie('auth_token');
+        var id = $(this).data('id');
+
+        var delete_confirmation = confirm("All exam data will be deleted!");
+        if(delete_confirmation){
+            $.ajax({
+                url: '/api',
+                type: 'POST', 
+                data: {action: 'delete_exam', auth_token: auth_token, id: id}
+            }).done(function(data){
+                if(data['status'] == 'success'){
+                    window.location.href = '/hr-exam.html';
+                }
+                else{
+                    console.log(data['message']);
+                }
+            })
+        }
+    });
+    $('#exam-editor-name').hover(function(){
+        $(this).append('<button class="table-cell-btn" id="change_exam_name">Change</button>')
+    }, function(){
+        $(this).find('button').remove();
+    });
+    $('#exam-editor-description').hover(function(){
+        $(this).append('<button class="table-cell-btn" id="change_exam_description">Change</button>')
+    }, function(){
+        $(this).find('button').remove();
+    })
+
+    $('#exam-editor-name').on('click', '#change_exam_name', function(event){
+        event.preventDefault();
+        var auth_token = getCookie('auth_token');
+        var id = $('#exam-editor-id').text();
+        var old_name = $('#exam-editor-name').text();
+        var description = $('#exam-editor-description').text();
+
+        var name = prompt("Enter exam name");
+        if(name.length > 0){
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {action: 'update_exam', auth_token: auth_token, id: id, name: name, description: description}
+            }).done(function(data){
+                if(data['status'] == 'success'){
+                    window.location.reload();
+                }
+            })
+        }
+    })
+    $('#exam-editor-description').on('click', '#change_exam_description', function(event){
+        event.preventDefault();
+        var auth_token = getCookie('auth_token');
+        var id = $('#exam-editor-id').text();
+        var name = $('#exam-editor-name').text();
+
+        var description = prompt("Enter exam description");
+        if(description.length > 0){
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {action: 'update_exam', auth_token: auth_token, id: id, name: name, description: description}
+            }).done(function(data){
+                if(data['status'] == 'success'){
+                    window.location.reload();
+                }
+            })
+        }
+    });
+    $('#add-question').click(function(event){
+        var question = $('#add-question-input').val();
+        var exam_id = $('#exam-editor-id').text();
+        if(question.length > 0){
+            var auth_token = getCookie("auth_token");
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    action: 'add_question',
+                    auth_token: auth_token,
+                    question: question,
+                    exam_id: exam_id
+                }
+            }).done(function(data){
+                if(data['status'] == 'success'){
+                    $('#add-question-input').val("");
+                    window.location.reload();
+                }
+            });
+        }
+    });
+    if($('.exam-question-table').length){
+        var exam_id = getParameterByName('exam_id');
+        load_question(exam_id);
+    }
 })
+
+function load_question(exam_id){
+    var auth_token = getCookie('auth_token');
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {action: 'get_questions', auth_token: auth_token, exam_id: exam_id}
+    }).done(function(data){
+        if(data['status'] == 'success'){
+            for(let key in data['questions']){
+                /*$.ajax({
+                    url: '/api',
+                    type: 'POST',
+                    data: {action: 'get_answers', auth_token: auth_token, question_id: question_data['questions'][key]['id'], }
+                }).done(function(data2){
+                   
+                });*/
+            var html = '<tr>';
+            html += '<td>';
+            html += '<div class="question-table-name">'+data['questions'][key]['question']+'</div>';
+            html += '</td>';
+            html += '</tr>';
+            $('.exam-question-table').find('table').append(html);
+            } 
+        }
+    });
+}
 
 
 

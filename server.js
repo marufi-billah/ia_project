@@ -328,6 +328,351 @@ HTTP.createServer(function(request, response){
                         response.end();
                     }
                 }
+
+                //Get Exams
+                if(POST['action'] == 'get_exams'){
+                    if(POST['auth_token'] !== undefined){
+                        var user = new User();
+                        user.get_exams(POST['auth_token']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Get Exam
+                if(POST['action'] == 'get_exam'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.get_exam(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Add Exam
+                if(POST['action'] == 'add_exam'){
+                    if(POST['auth_token'] !== undefined && POST['name'] !== undefined && POST['description'] !== undefined){
+                        var user = new User();
+                        user.add_exam(POST['auth_token'], POST['name'], POST['description']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Update Exam
+                if(POST['action'] == 'update_exam'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined && POST['name'] !== undefined && POST['description'] !== undefined){
+                        var user = new User();
+                        user.update_exam(POST['auth_token'], POST['id'], POST['name'], POST['description']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Delete Exam
+                if(POST['action'] == 'delete_exam'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.delete_exam(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Get Questions
+                if(POST['action'] == 'get_questions'){
+                    if(POST['auth_token'] !== undefined && POST['exam_id'] !== undefined){
+                        var user = new User();
+                        user.get_questions(POST['auth_token'], POST['exam_id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Get Question
+                if(POST['action'] == 'get_question'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.get_question(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Add Question
+                if(POST['action'] == 'add_question'){
+                    if(POST['auth_token'] !== undefined && POST['question'] !== undefined && POST['exam_id'] !== undefined){
+                        var user = new User();
+                        user.add_question(POST['auth_token'], POST['question'], POST['exam_id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Update Question
+                if(POST['action'] == 'update_question'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined && POST['question'] !== undefined){
+                        var user = new User();
+                        user.update_question(POST['auth_token'], POST['id'], POST['question']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Delete Question
+                if(POST['action'] == 'delete_question'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.delete_question(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Get Answers
+                if(POST['action'] == 'get_answers'){
+                    if(POST['auth_token'] !== undefined && POST['question_id'] !== undefined){
+                        var user = new User();
+                        user.get_answers(POST['auth_token'], POST['question_id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Get Answer
+                if(POST['action'] == 'get_answer'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.get_answer(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Add Answer
+                if(POST['action'] == 'add_answer'){
+                    if(POST['auth_token'] !== undefined && POST['answer'] !== undefined && POST['correct'] !== undefined && POST['question_id'] !== undefined){
+                        var user = new User();
+                        user.add_answer(POST['auth_token'], POST['answer'], POST['correct'] ,POST['question_id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Update Answer
+                if(POST['action'] == 'update_answer'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined && POST['answer'] !== undefined && POST['correct'] !== undefined){
+                        var user = new User();
+                        user.update_answer(POST['auth_token'], POST['id'], POST['answer'], POST['correct']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
+
+                //Delete Answer
+                if(POST['action'] == 'delete_answer'){
+                    if(POST['auth_token'] !== undefined && POST['id'] !== undefined){
+                        var user = new User();
+                        user.delete_answer(POST['auth_token'], POST['id']).then((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        }).catch((data) => {
+                            parsed_data = JSON.parse(data);
+                            response.writeHead(parsed_data['code'], {'Content-Type': 'application/json'});
+                            response.write(data);
+                            response.end();
+                        });
+                    }
+                    else{
+                        response.writeHead(400, {'Content-Type': 'application/json'});
+                        response.write('{"status":"error","code":"400","message":"Invalid request!"}');
+                        response.end();
+                    }
+                }
             });
         }
     }
